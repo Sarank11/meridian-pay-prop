@@ -42,17 +42,10 @@
      identical regardless of the phone's system theme. */
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html {
+  html, body {
     height: 100%;
     overflow: hidden;
-  }
-
-  body {
     margin: 0;
-    height: 100%;
-    height: 100dvh;
-    height: calc(var(--app-height, 100dvh));
-    overflow: hidden;
     background: var(--bg);
     color: var(--ink);
     font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -60,17 +53,23 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Pinned directly to the real viewport edges with position:fixed rather
+     than any height percentage/dvh/JS-measured value — those were all
+     inconsistent in iOS standalone mode and kept leaving a gap at the
+     bottom. Fixed positioning is anchored to the true screen bounds no
+     matter what. */
   #app {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
     max-width: 480px;
-    margin: 0 auto;
-    height: 100%;
-    height: 100dvh;
-    height: calc(var(--app-height, 100dvh));
     display: flex;
     flex-direction: column;
     background: var(--bg);
     padding-top: max(env(safe-area-inset-top), 59px);
-    position: relative;
     overflow: hidden;
   }
 
@@ -685,17 +684,6 @@
 <script>
 (function () {
   "use strict";
-
-  // iOS standalone PWAs can report `100dvh` inconsistently, leaving a gap
-  // below the tab bar. Measure the real visible height in JS instead.
-  function setAppHeight() {
-    var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    document.documentElement.style.setProperty("--app-height", h + "px");
-  }
-  setAppHeight();
-  window.addEventListener("resize", setAppHeight);
-  window.addEventListener("orientationchange", function () { setTimeout(setAppHeight, 100); });
-  if (window.visualViewport) window.visualViewport.addEventListener("resize", setAppHeight);
 
   var DEFAULTS = {
     holderName: "Saran",
