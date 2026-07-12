@@ -42,16 +42,16 @@
      identical regardless of the phone's system theme. */
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body {
+  html {
     height: 100%;
     overflow: hidden;
-    position: fixed;
-    inset: 0;
-    width: 100%;
   }
 
   body {
     margin: 0;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
     background: var(--bg);
     color: var(--ink);
     font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -63,10 +63,11 @@
     max-width: 480px;
     margin: 0 auto;
     height: 100%;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     background: var(--bg);
-    padding-top: env(safe-area-inset-top);
+    padding-top: max(env(safe-area-inset-top), 20px);
     padding-bottom: env(safe-area-inset-bottom);
     position: relative;
     overflow: hidden;
@@ -75,7 +76,7 @@
   /* ---------- Top alert banner (fake notification) ---------- */
   #alertBanner {
     position: fixed;
-    top: calc(env(safe-area-inset-top) + 8px);
+    top: calc(max(env(safe-area-inset-top), 20px) + 8px);
     left: 50%;
     transform: translateX(-50%) translateY(-140%);
     pointer-events: none;
@@ -1118,7 +1119,10 @@
       && "serviceWorker" in navigator;
 
     if (useRealNotification) {
-      navigator.serviceWorker.ready.then(function (reg) {
+      var swReady = navigator.serviceWorker.ready;
+      var timedOut = new Promise(function (resolve) { setTimeout(resolve, 1500, null); });
+      Promise.race([swReady, timedOut]).then(function (reg) {
+        if (!reg) { showBannerFallback(); return; }
         reg.showNotification(state.bankName, {
           body: body,
           icon: "icons/icon-192.png",
@@ -1143,6 +1147,15 @@
     }
   }
   $("alertBanner").addEventListener("click", function () { this.classList.remove("show"); });
+
+  // Safety net: if the banner is somehow still showing well past its auto-hide
+  // window (e.g. a background tab throttled the timer), force it closed the
+  // next time the app becomes visible again.
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") {
+      $("alertBanner").classList.remove("show");
+    }
+  });
 
   // ---- Real iOS notification permission ----
   function refreshNotifStatus() {
