@@ -1,4 +1,4 @@
-const CACHE = "onyx-co-v3";
+const CACHE = "british-express-v1";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
 

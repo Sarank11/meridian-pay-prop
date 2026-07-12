@@ -4,36 +4,38 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
 <meta name="color-scheme" content="light" />
-<title>Onyx & Co. — Prop Banking App</title>
+<title>British Express — Prop Banking App</title>
 <meta name="description" content="Prop banking app for film production. Fictional bank, editable balance, fake payment alerts." />
 
 <!-- PWA / iOS standalone -->
 <link rel="manifest" href="manifest.webmanifest" />
-<meta name="theme-color" content="#f3f2ee" />
+<meta name="theme-color" content="#efe9da" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Onyx & Co." />
+<meta name="apple-mobile-web-app-title" content="British Express" />
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 <link rel="icon" href="icons/icon-192.png" />
 
 <style>
   :root {
-    --bg: #f3f2ee;
-    --surface: #ffffff;
-    --surface-2: #f5f4ef;
-    --hairline: #e6e3d9;
-    --ink: #15151a;
-    --ink-muted: #6c6a62;
-    --ink-faint: #9c9a90;
-    --accent: #8a6a24;
-    --accent-2: #c9a227;
-    --accent-ink: #f6efdc;
-    --positive: #1f9d63;
-    --negative: #b3392e;
-    --warn: #ad7d1f;
-    --focus: #8a6a24;
-    --shadow-color: 35 15% 12%;
+    --bg: #efe9da;
+    --surface: #fbf8f0;
+    --surface-2: #efe7d3;
+    --hairline: #cabe9c;
+    --ink: #1a2333;
+    --ink-muted: #5b5646;
+    --ink-faint: #948c72;
+    --accent: #1c3564;
+    --accent-2: #8a6a24;
+    --accent-gold: #a9812f;
+    --accent-ink: #eef1f7;
+    --positive: #1f6b45;
+    --negative: #8c2f26;
+    --warn: #8a6a24;
+    --focus: #1c3564;
+    --shadow-color: 30 30% 10%;
     --card-grad: linear-gradient(135deg, #2c2c33 0%, #08080b 100%);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
   }
 
   /* Locked to light mode on purpose: this is a film prop and must look
@@ -93,83 +95,90 @@
   }
   #alertBanner.show { transform: translateX(-50%) translateY(0); pointer-events: auto; }
   #alertBanner .abIcon {
-    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
-    background: var(--card-grad);
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    background: var(--accent);
     display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: 15px;
   }
   #alertBanner .abBody { flex: 1; min-width: 0; }
   #alertBanner .abTop { display: flex; justify-content: space-between; gap: 8px; }
-  #alertBanner .abApp { font-size: 12.5px; font-weight: 700; letter-spacing: 0.01em; }
+  #alertBanner .abApp { font-family: var(--serif); font-size: 12.5px; font-weight: 700; letter-spacing: 0.01em; }
   #alertBanner .abTime { font-size: 11.5px; color: rgba(255,255,255,0.55); flex-shrink: 0; }
   #alertBanner .abTitle { font-size: 13.5px; font-weight: 700; margin-top: 2px; }
   #alertBanner .abMsg { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 1px; }
 
   /* ---------- Header ---------- */
-  .topbar { padding: 14px 20px 2px; }
+  .topbar { padding: 16px 20px 4px; }
   .brand-row { display: flex; align-items: center; justify-content: space-between; }
-  .brand-lockup { display: flex; align-items: center; gap: 8px; }
+  .brand-lockup { display: flex; align-items: center; gap: 10px; }
   .brand-mark {
-    width: 26px; height: 26px; border-radius: 8px; background: var(--card-grad);
-    display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 12px; flex-shrink: 0;
+    width: 30px; height: 30px; border-radius: 50%; background: var(--accent);
+    display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
   }
-  .brand-wordmark { font-size: 15px; font-weight: 800; letter-spacing: -0.01em; color: var(--ink); }
-  .topbar-icons { display: flex; align-items: center; gap: 8px; }
+  .brand-wordmark { font-family: var(--serif); font-size: 17px; font-weight: 700; letter-spacing: 0.01em; color: var(--ink); line-height: 1.1; }
+  .brand-tagline { font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent-2); margin-top: 1px; }
+  .topbar-icons { display: flex; align-items: center; gap: 6px; }
   .icon-btn {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: none; border: none;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: none; border: 1px solid transparent;
     display: flex; align-items: center; justify-content: center;
-    position: relative; color: var(--ink-muted); cursor: pointer; flex-shrink: 0;
+    position: relative; color: var(--accent); cursor: pointer; flex-shrink: 0;
   }
   .icon-btn.has-dot::after {
     content: ""; position: absolute; top: 6px; right: 6px;
     width: 7px; height: 7px; border-radius: 50%; background: var(--negative);
     border: 1.5px solid var(--bg);
   }
-  .greeting-main { font-size: 22px; font-weight: 800; margin: 10px 0 14px; letter-spacing: -0.01em; }
-
-  /* ---------- Account cards (Santander-style list) ---------- */
-  .acct-card {
-    background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
-    padding: 15px 16px; margin-bottom: 10px;
+  .greeting-main {
+    font-family: var(--serif); font-style: italic; font-weight: 500;
+    font-size: 21px; margin: 14px 0 16px; letter-spacing: 0; color: var(--ink);
   }
-  .acct-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-  .acct-title { font-size: 12.5px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink); }
+
+  /* ---------- Account cards (classic statement style) ---------- */
+  .acct-card {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 5px;
+    padding: 16px 17px; margin-bottom: 10px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+  }
+  .acct-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--hairline); }
+  .acct-title { font-family: var(--serif); font-size: 13.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); }
   .acct-glyph {
-    width: 26px; height: 26px; border-radius: 7px; background: var(--card-grad); flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 11px;
+    width: 28px; height: 28px; border-radius: 50%; background: var(--accent); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; color: #fff;
   }
   .acct-number {
-    font-size: 12px; color: var(--ink-faint); margin-top: 4px; font-variant-numeric: tabular-nums;
-    font-family: "SFMono-Regular", Consolas, "Courier New", monospace; letter-spacing: 0.01em;
+    font-size: 11.5px; color: var(--ink-faint); margin-top: 4px; font-variant-numeric: tabular-nums;
+    font-family: "SFMono-Regular", Consolas, "Courier New", monospace; letter-spacing: 0.02em;
   }
-  .acct-balance-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 14px; }
-  .acct-balance-label { font-size: 12.5px; color: var(--ink-muted); font-weight: 600; }
+  .acct-balance-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 13px; }
+  .acct-balance-label { font-size: 11.5px; color: var(--ink-muted); font-weight: 600; letter-spacing: 0.02em; }
   .acct-balance-amount {
-    font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
-    background: none; border: none; color: var(--ink); text-align: right; padding: 0; font-family: inherit;
+    font-family: var(--serif); font-size: 23px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0;
+    background: none; border: none; color: var(--ink); text-align: right; padding: 0;
     max-width: 62%;
   }
   .acct-balance-amount:focus { outline: none; }
 
   .acct-row {
-    background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
-    padding: 14px 16px; margin-bottom: 10px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 5px;
+    padding: 14px 17px; margin-bottom: 10px;
     display: flex; align-items: center; gap: 12px; cursor: pointer;
     font-family: inherit; width: 100%; text-align: left;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
   }
   .acct-row-info { flex: 1; min-width: 0; }
-  .acct-row-title { font-size: 12.5px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; }
-  .acct-row-sub { font-size: 12.5px; color: var(--ink-faint); margin-top: 3px; }
+  .acct-row-title { font-family: var(--serif); font-size: 13.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .acct-row-sub { font-size: 12px; color: var(--ink-faint); margin-top: 3px; }
   .acct-row-thumb {
-    width: 44px; height: 30px; border-radius: 6px; background: var(--card-grad); flex-shrink: 0;
+    width: 44px; height: 30px; border-radius: 4px; background: var(--card-grad); flex-shrink: 0;
     box-shadow: 0 3px 8px -3px hsl(var(--shadow-color) / 0.4);
   }
   .acct-row-chevron { color: var(--ink-faint); flex-shrink: 0; }
 
   .link-row {
     display: flex; align-items: center; gap: 9px; padding: 12px 4px;
-    color: var(--accent); font-size: 13.5px; font-weight: 700; background: none; border: none;
+    color: var(--accent); font-size: 13px; font-weight: 700; background: none; border: none;
     font-family: inherit; cursor: pointer;
   }
 
@@ -199,56 +208,62 @@
     background: none; border: none; font-family: inherit; cursor: pointer; color: var(--ink);
   }
   .action-circle {
-    width: 52px; height: 52px; border-radius: 50%;
-    background: var(--surface); color: var(--accent);
-    border: 1.5px solid var(--accent);
+    width: 50px; height: 50px; border-radius: 8px;
+    background: var(--accent); color: var(--accent-2);
+    border: none;
     display: flex; align-items: center; justify-content: center;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
   }
-  .action-label { font-size: 11.5px; font-weight: 700; color: var(--ink-muted); text-align: center; line-height: 1.25; }
+  .action-label { font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em; color: var(--ink-muted); text-align: center; line-height: 1.3; text-transform: uppercase; }
 
   /* ---------- Summary tiles ---------- */
   .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 4px; }
   .tile {
-    background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
-    padding: 14px 14px 15px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 5px;
+    padding: 14px 15px 15px;
   }
   .tile-icon {
-    width: 32px; height: 32px; border-radius: 9px; background: var(--surface-2);
+    width: 30px; height: 30px; border-radius: 50%; background: var(--surface-2);
     display: flex; align-items: center; justify-content: center; margin-bottom: 10px; color: var(--accent);
   }
-  .tile-title { font-size: 13px; font-weight: 700; }
+  .tile-title { font-family: var(--serif); font-size: 13px; font-weight: 700; }
   .tile-sub { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
-  .tile-value { font-size: 19px; font-weight: 800; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .tile-value { font-family: var(--serif); font-size: 18px; font-weight: 700; margin-top: 8px; font-variant-numeric: tabular-nums; }
 
   /* ---------- Section ---------- */
   .section-title {
     display: flex; justify-content: space-between; align-items: baseline;
-    margin: 22px 0 10px;
+    margin: 24px 0 10px; padding-bottom: 8px; border-bottom: 1px solid var(--hairline);
   }
-  .section-title h2 { font-size: 15px; font-weight: 800; margin: 0; }
-  .section-title button { background: none; border: none; font-size: 12.5px; font-weight: 700; color: var(--accent); font-family: inherit; cursor: pointer; padding: 0; }
+  .section-title h2 { font-family: var(--serif); font-size: 15.5px; font-weight: 700; margin: 0; letter-spacing: 0.01em; }
+  .section-title button { background: none; border: none; font-size: 12px; font-weight: 700; color: var(--accent); font-family: inherit; cursor: pointer; padding: 0; text-transform: uppercase; letter-spacing: 0.03em; }
 
-  .tx-list { display: flex; flex-direction: column; gap: 1px; background: var(--hairline); border-radius: 16px; overflow: hidden; border: 1px solid var(--hairline); }
+  .tx-list { display: flex; flex-direction: column; border-radius: 5px; overflow: hidden; border: 1px solid var(--hairline); }
   .tx {
     display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
   }
+  .tx:last-child { border-bottom: none; }
+  .tx:nth-child(even) { background: var(--surface-2); }
   .tx-icon {
-    width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    background: var(--surface-2); font-weight: 700; font-size: 14px; color: var(--accent);
+    background: var(--bg); font-weight: 700; font-size: 13px; color: var(--accent);
+    border: 1px solid var(--hairline);
   }
-  .tx-icon.credit { background: color-mix(in srgb, var(--positive) 15%, var(--surface-2)); color: var(--positive); }
-  .tx-icon.debit { background: color-mix(in srgb, var(--negative) 12%, var(--surface-2)); color: var(--negative); }
-  .tx-icon.pending { background: color-mix(in srgb, var(--warn) 18%, var(--surface-2)); color: var(--warn); }
+  .tx-icon.credit { background: color-mix(in srgb, var(--positive) 12%, var(--bg)); color: var(--positive); }
+  .tx-icon.debit { background: color-mix(in srgb, var(--negative) 10%, var(--bg)); color: var(--negative); }
+  .tx-icon.pending { background: color-mix(in srgb, var(--warn) 16%, var(--bg)); color: var(--warn); }
   .tx-info { flex: 1; min-width: 0; }
   .tx-name { font-size: 13.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tx-meta { font-size: 11.5px; color: var(--ink-faint); margin-top: 1px; }
-  .tx-amount { font-size: 13.5px; font-weight: 800; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .tx-amount { font-family: var(--serif); font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; flex-shrink: 0; }
   .tx-amount.credit { color: var(--positive); }
   .tx-amount.debit { color: var(--ink); }
   .tx-action {
     font-size: 11px; font-weight: 700; color: #fff; background: var(--accent);
-    border: none; border-radius: 8px; padding: 6px 9px; font-family: inherit; cursor: pointer; flex-shrink: 0;
+    border: none; border-radius: 4px; padding: 6px 9px; font-family: inherit; cursor: pointer; flex-shrink: 0;
+    text-transform: uppercase; letter-spacing: 0.02em;
   }
   .tx-del {
     background: none; border: none; color: var(--ink-faint); font-size: 16px; cursor: pointer; padding: 2px 4px; flex-shrink: 0;
@@ -310,7 +325,7 @@
   }
   .paycard-exp { font-size: 10.5px; color: rgba(243,241,234,0.65); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
   .card-hint { font-size: 12px; color: var(--ink-faint); text-align: center; margin-top: 10px; }
-  .card-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px; }
+  .card-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 5px; }
   .card-toggle-row div { font-size: 13.5px; font-weight: 700; }
   .card-toggle-row small { display:block; font-size: 11.5px; color: var(--ink-faint); font-weight: 500; margin-top: 2px; }
 
@@ -322,7 +337,7 @@
   .switch input:checked + .slider::before { transform: translateX(19px); }
 
   /* ---------- Settings ---------- */
-  .field-group { background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px; overflow: hidden; margin-bottom: 16px; }
+  .field-group { background: var(--surface); border: 1px solid var(--hairline); border-radius: 5px; overflow: hidden; margin-bottom: 16px; }
   .field { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--hairline); }
   .field:last-child { border-bottom: none; }
   .field label { font-size: 11.5px; font-weight: 700; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -332,13 +347,13 @@
   }
   .field input:focus, .field select:focus { outline: none; }
   .btn {
-    width: 100%; padding: 13px; border-radius: 13px; border: none; font-family: inherit;
-    font-size: 14.5px; font-weight: 700; cursor: pointer;
+    width: 100%; padding: 13px; border-radius: 4px; border: none; font-family: inherit;
+    font-size: 13.5px; font-weight: 700; cursor: pointer; letter-spacing: 0.03em; text-transform: uppercase;
   }
   .btn-primary { background: var(--accent); color: #fff; }
   .btn-danger { background: color-mix(in srgb, var(--negative) 14%, var(--surface)); color: var(--negative); }
   .btn-ghost { background: var(--surface-2); color: var(--ink); }
-  .settings-note { font-size: 12px; color: var(--ink-faint); line-height: 1.5; margin-top: 4px; text-align: center; padding: 0 8px; }
+  .settings-note { font-size: 12px; color: var(--ink-faint); line-height: 1.5; margin-top: 4px; text-align: center; padding: 0 8px; text-transform: none; letter-spacing: 0; }
 
   /* ---------- Tab bar ---------- */
   .tabbar {
@@ -353,7 +368,7 @@
     background: none; border: none; font-family: inherit; color: var(--ink-faint); cursor: pointer; padding: 4px 10px;
   }
   .tab.active { color: var(--accent); }
-  .tab span { font-size: 10px; font-weight: 700; }
+  .tab span { font-size: 9.5px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
 
   /* ---------- Modal / sheet ---------- */
   .sheet-backdrop {
@@ -365,7 +380,7 @@
     position: fixed; left: 50%; bottom: 0; transform: translate(-50%, 100%);
     width: min(94vw, 480px);
     background: var(--surface);
-    border-radius: 22px 22px 0 0;
+    border-radius: 10px 10px 0 0;
     padding: 10px 20px calc(22px + env(safe-area-inset-bottom));
     z-index: 91;
     transition: transform 0.32s cubic-bezier(0.2,1,0.3,1);
@@ -374,17 +389,17 @@
   }
   .sheet.show { transform: translate(-50%, 0); }
   .sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--hairline); margin: 6px auto 14px; }
-  .sheet h3 { font-size: 17px; font-weight: 800; margin: 0 0 14px; }
+  .sheet h3 { font-family: var(--serif); font-size: 18px; font-weight: 700; margin: 0 0 14px; }
   .sheet-field { margin-bottom: 12px; }
   .sheet-field label { display: block; font-size: 11.5px; font-weight: 700; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
   .sheet-field input, .sheet-field select {
-    width: 100%; padding: 12px 13px; border-radius: 12px; border: 1px solid var(--hairline);
+    width: 100%; padding: 12px 13px; border-radius: 4px; border: 1px solid var(--hairline);
     background: var(--surface-2); font-family: inherit; font-size: 15px; font-weight: 600; color: var(--ink);
   }
   .sheet-field input:focus, .sheet-field select:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
   .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
   .chip {
-    padding: 7px 12px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--surface-2);
+    padding: 7px 12px; border-radius: 4px; border: 1px solid var(--hairline); background: var(--surface-2);
     font-size: 12.5px; font-weight: 700; color: var(--ink-muted); cursor: pointer; font-family: inherit;
   }
   .chip.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -393,7 +408,7 @@
 
   .toast {
     position: fixed; bottom: calc(90px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--ink); color: var(--bg); padding: 11px 18px; border-radius: 12px; font-size: 13px; font-weight: 700;
+    background: var(--ink); color: var(--bg); padding: 11px 18px; border-radius: 5px; font-size: 13px; font-weight: 700;
     z-index: 150; opacity: 0; transition: 0.25s; pointer-events: none; white-space: nowrap;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -408,10 +423,10 @@
 <body>
 
 <div id="alertBanner">
-  <div class="abIcon">O</div>
+  <div class="abIcon">B</div>
   <div class="abBody">
     <div class="abTop">
-      <span class="abApp">Onyx &amp; Co.</span>
+      <span class="abApp" id="abApp">British Express</span>
       <span class="abTime" id="abTime">now</span>
     </div>
     <div class="abTitle" id="abTitle">Payment received</div>
@@ -425,9 +440,12 @@
     <div class="brand-row">
       <div class="brand-lockup">
         <div class="brand-mark" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 0.5L13 4V10L7 13.5L1 10V4L7 0.5Z" fill="none" stroke="#e8c988" stroke-width="1"/><path d="M7 0.5L13 4L7 7L1 4L7 0.5Z" fill="#e8c988" fill-opacity="0.85"/><path d="M1 4L7 7V13.5L1 10V4Z" fill="#c9a227" fill-opacity="0.55"/><path d="M13 4L7 7V13.5L13 10V4Z" fill="#f2dca0" fill-opacity="0.7"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 2.2L19.2 5V12.2C19.2 16.8 15.9 20.3 12 21.7C8.1 20.3 4.8 16.8 4.8 12.2V5L12 2.2Z" fill="#eccf8e" stroke="#f6efdc" stroke-width="0.6"/><path d="M5.3 10.2H18.7L17.7 13.2H6.3Z" fill="#12203a"/></svg>
         </div>
-        <span class="brand-wordmark" id="brandWordmark">Onyx &amp; Co.</span>
+        <div>
+          <div class="brand-wordmark" id="brandWordmark">British Express</div>
+          <div class="brand-tagline">Private Banking</div>
+        </div>
       </div>
       <div class="topbar-icons">
         <button class="icon-btn" id="eyeBtn" aria-label="Hide balances" aria-pressed="false">
@@ -472,11 +490,11 @@
       <div class="acct-card">
         <div class="acct-card-top">
           <div>
-            <div class="acct-title" id="acctTitleText">ONYX CURRENT ACCOUNT</div>
+            <div class="acct-title" id="acctTitleText">BRITISH EXPRESS CURRENT ACCOUNT</div>
             <div class="acct-number">40-19-08 <span id="acctSuffix">8841</span></div>
           </div>
           <div class="acct-glyph" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 0.5L13 4V10L7 13.5L1 10V4L7 0.5Z" fill="none" stroke="#e8c988" stroke-width="1"/><path d="M7 0.5L13 4L7 7L1 4L7 0.5Z" fill="#e8c988" fill-opacity="0.85"/><path d="M1 4L7 7V13.5L1 10V4Z" fill="#c9a227" fill-opacity="0.55"/><path d="M13 4L7 7V13.5L13 10V4Z" fill="#f2dca0" fill-opacity="0.7"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2.2L19.2 5V12.2C19.2 16.8 15.9 20.3 12 21.7C8.1 20.3 4.8 16.8 4.8 12.2V5L12 2.2Z" fill="#eccf8e" stroke="#f6efdc" stroke-width="0.6"/><path d="M5.3 10.2H18.7L17.7 13.2H6.3Z" fill="#12203a"/></svg>
           </div>
         </div>
         <div class="acct-balance-row">
@@ -526,9 +544,9 @@
     <section class="screen" id="screen-cards">
       <div class="section-title" style="margin-top:14px;"><h2>Your card</h2></div>
       <div class="paycard" id="payCard">
-        <svg class="paycard-watermark" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 0.5L13 4V10L7 13.5L1 10V4L7 0.5Z" fill="none" stroke="#f3dfa0" stroke-width="0.4"/><path d="M7 0.5L13 4L7 7L1 4L7 0.5Z" fill="#f3dfa0"/><path d="M1 4L7 7V13.5L1 10V4Z" fill="#f3dfa0" fill-opacity="0.6"/><path d="M13 4L7 7V13.5L13 10V4Z" fill="#f3dfa0" fill-opacity="0.8"/></svg>
+        <svg class="paycard-watermark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.2L19.2 5V12.2C19.2 16.8 15.9 20.3 12 21.7C8.1 20.3 4.8 16.8 4.8 12.2V5L12 2.2Z" fill="#f3dfa0"/><path d="M5.3 10.2H18.7L17.7 13.2H6.3Z" fill="#08080b"/></svg>
         <div class="paycard-top">
-          <div class="paycard-brand" id="cardBrand">Onyx &amp; Co.</div>
+          <div class="paycard-brand" id="cardBrand">British Express</div>
           <div class="paycard-chip-row">
             <div class="paycard-chip"></div>
             <button class="paycard-reveal" id="cardRevealBtn" aria-label="Reveal card details" aria-pressed="false">
@@ -594,7 +612,7 @@
         </div>
         <div class="field">
           <label for="settingBank">Bank / app name</label>
-          <input id="settingBank" type="text" value="Onyx &amp; Co." />
+          <input id="settingBank" type="text" value="British Express" />
         </div>
         <div class="field">
           <label for="settingAcct">Account number (last 4)</label>
@@ -733,7 +751,7 @@
 
   var DEFAULTS = {
     holderName: "Saran",
-    bankName: "Onyx & Co.",
+    bankName: "British Express",
     acctLast4: "8841",
     currency: "£",
     balance: 4000.00,
@@ -746,7 +764,7 @@
     ]
   };
 
-  var STORAGE_KEY = "onyxCoPropState_v1";
+  var STORAGE_KEY = "britishExpressPropState_v1";
 
   function loadState() {
     try {
@@ -809,6 +827,7 @@
     $("balanceInput").disabled = !!state.balanceHidden;
     $("cardBrand").textContent = state.bankName;
     $("cardLast4").textContent = state.acctLast4;
+    $("abApp").textContent = state.bankName;
     document.title = state.bankName + " — Prop Banking App";
 
     var weekAgo = Date.now() - 1000 * 60 * 60 * 24 * 7;
@@ -1088,7 +1107,7 @@
           body: body,
           icon: "icons/icon-192.png",
           badge: "icons/icon-192.png",
-          tag: "onyx-alert",
+          tag: "british-express-alert",
           renotify: true,
           vibrate: [40, 30, 40]
         }).catch(function () { showBannerFallback(); });
