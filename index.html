@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
 <meta name="color-scheme" content="light" />
 <title>British Express — Prop Banking App</title>
-<meta name="description" content="Prop banking app for film production. Fictional bank, editable balance, fake payment alerts." />
+<meta name="description" content="Prop banking app for film production. Fictional bank with an editable balance and transaction history." />
 
 <!-- PWA / iOS standalone -->
 <link rel="manifest" href="manifest.webmanifest" />
@@ -84,40 +84,6 @@
     z-index: 1;
   }
 
-  /* ---------- Top alert banner (fake notification) ---------- */
-  #alertBanner {
-    position: fixed;
-    top: calc(max(env(safe-area-inset-top), 59px) + 14px);
-    left: 50%;
-    transform: translateX(-50%) translateY(-140%);
-    pointer-events: none;
-    width: min(94vw, 420px);
-    background: rgba(28, 30, 40, 0.86);
-    backdrop-filter: blur(20px) saturate(1.4);
-    -webkit-backdrop-filter: blur(20px) saturate(1.4);
-    color: #fff;
-    border-radius: 18px;
-    padding: 12px 14px;
-    display: flex;
-    align-items: flex-start;
-    gap: 11px;
-    z-index: 200;
-    box-shadow: 0 12px 30px hsl(var(--shadow-color) / 0.45);
-    transition: transform 0.45s cubic-bezier(0.2, 1, 0.3, 1);
-  }
-  #alertBanner.show { transform: translateX(-50%) translateY(0); pointer-events: auto; }
-  #alertBanner .abIcon {
-    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
-    background: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 15px;
-  }
-  #alertBanner .abBody { flex: 1; min-width: 0; }
-  #alertBanner .abTop { display: flex; justify-content: space-between; gap: 8px; }
-  #alertBanner .abApp { font-family: var(--serif); font-size: 12.5px; font-weight: 700; letter-spacing: 0.01em; }
-  #alertBanner .abTime { font-size: 11.5px; color: rgba(255,255,255,0.55); flex-shrink: 0; }
-  #alertBanner .abTitle { font-size: 13.5px; font-weight: 700; margin-top: 2px; }
-  #alertBanner .abMsg { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 1px; }
 
   /* ---------- Header ---------- */
   .topbar { padding: 16px 20px 4px; }
@@ -217,8 +183,9 @@
 
   /* ---------- Action row ---------- */
   .actions {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
     margin: 4px 0 20px;
+    max-width: 320px;
   }
   .action-btn {
     display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -441,18 +408,6 @@
 </head>
 <body>
 
-<div id="alertBanner">
-  <div class="abIcon">B</div>
-  <div class="abBody">
-    <div class="abTop">
-      <span class="abApp" id="abApp">British Express</span>
-      <span class="abTime" id="abTime">now</span>
-    </div>
-    <div class="abTitle" id="abTitle">Payment received</div>
-    <div class="abMsg" id="abMsg">+£1,000.00 from Someone</div>
-  </div>
-</div>
-
 <div id="app">
   <div class="status-fill" aria-hidden="true"></div>
 
@@ -499,10 +454,6 @@
         <button class="action-btn" data-goto="cards">
           <span class="action-circle"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="5.5" width="15" height="10" rx="2.2" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 9H17.5" stroke="currentColor" stroke-width="1.8"/></svg></span>
           <span class="action-label">Manage<br>cards</span>
-        </button>
-        <button class="action-btn" data-action="alert">
-          <span class="action-circle"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2.5C7.5 2.5 5.5 4.5 5.5 7.2V10.3L4 12.8C3.7 13.3 4.1 14 4.7 14H15.3C15.9 14 16.3 13.3 16 12.8L14.5 10.3V7.2C14.5 4.5 12.5 2.5 10 2.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
-          <span class="action-label">Alerts</span>
         </button>
         <button class="action-btn" data-action="more">
           <span class="action-circle"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="5" cy="10" r="1.4" fill="currentColor"/><circle cx="10" cy="10" r="1.4" fill="currentColor"/><circle cx="15" cy="10" r="1.4" fill="currentColor"/></svg></span>
@@ -729,34 +680,6 @@
   </div>
 </div>
 
-<div class="sheet" id="sheet-alert">
-  <div class="sheet-handle"></div>
-  <h3>Fake incoming alert</h3>
-  <div class="sheet-field"><label>From</label><input id="alertFrom" type="text" placeholder="Sender name" /></div>
-  <div class="sheet-field"><label>Amount</label><input id="alertAmount" type="number" inputmode="decimal" placeholder="0.00" /></div>
-  <div class="sheet-field">
-    <label>Delay before it fires</label>
-    <div class="chip-row" id="delayChips">
-      <button class="chip selected" data-delay="0">Instant</button>
-      <button class="chip" data-delay="5">5s</button>
-      <button class="chip" data-delay="15">15s</button>
-      <button class="chip" data-delay="30">30s</button>
-      <button class="chip" data-delay="60">1 min</button>
-    </div>
-  </div>
-  <div class="sheet-field">
-    <label>Also credit the balance</label>
-    <div class="chip-row" id="creditChips">
-      <button class="chip selected" data-credit="yes">Yes, add to balance</button>
-      <button class="chip" data-credit="no">No, alert only</button>
-    </div>
-  </div>
-  <div class="sheet-actions">
-    <button class="btn btn-ghost" data-close-sheet>Cancel</button>
-    <button class="btn btn-primary" id="confirmAlert">Schedule alert</button>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -790,20 +713,7 @@
       { id: 6, name: "Addison Lee", meta: "Taxi", amount: -37.80, type: "debit", time: Date.now() - 1000 * 60 * 60 * 54 },
       { id: 7, name: "Dividend — Sterling Capital", meta: "Quarterly distribution", amount: 890.15, type: "credit", time: Date.now() - 1000 * 60 * 60 * 75 },
       { id: 8, name: "Selfridges", meta: "Card payment · Oxford Street", amount: -258.99, type: "debit", time: Date.now() - 1000 * 60 * 60 * 96 },
-      { id: 9, name: "Borough Market", meta: "Card payment", amount: -22.60, type: "debit", time: Date.now() - 1000 * 60 * 60 * 118 },
-      { id: 10, name: "Direct Deposit", meta: "Salary", amount: 5200, type: "credit", time: Date.now() - 1000 * 60 * 60 * 24 * 43 },
-      { id: 11, name: "Rent — Belgravia Mews", meta: "Standing order", amount: -3200, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 41 },
-      { id: 12, name: "Direct Deposit", meta: "Salary", amount: 5200, type: "credit", time: Date.now() - 1000 * 60 * 60 * 24 * 74 },
-      { id: 13, name: "Rent — Belgravia Mews", meta: "Standing order", amount: -3200, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 72 },
-      { id: 14, name: "Direct Deposit", meta: "Salary", amount: 5200, type: "credit", time: Date.now() - 1000 * 60 * 60 * 24 * 104 },
-      { id: 15, name: "Rent — Belgravia Mews", meta: "Standing order", amount: -3200, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 102 },
-      { id: 16, name: "Direct Deposit", meta: "Salary", amount: 5200, type: "credit", time: Date.now() - 1000 * 60 * 60 * 24 * 135 },
-      { id: 17, name: "Rent — Belgravia Mews", meta: "Standing order", amount: -3200, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 133 },
-      { id: 18, name: "The Shard Residences", meta: "Card payment", amount: -410.75, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 128 },
-      { id: 19, name: "Direct Deposit", meta: "Salary", amount: 5200, type: "credit", time: Date.now() - 1000 * 60 * 60 * 24 * 163 },
-      { id: 20, name: "Rent — Belgravia Mews", meta: "Standing order", amount: -3200, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 161 },
-      { id: 21, name: "Direct Deposit", meta: "Salary", amount: 5200, type: "credit", time: Date.now() - 1000 * 60 * 60 * 24 * 194 },
-      { id: 22, name: "Rent — Belgravia Mews", meta: "Standing order", amount: -3200, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 192 }
+      { id: 9, name: "Borough Market", meta: "Card payment", amount: -22.60, type: "debit", time: Date.now() - 1000 * 60 * 60 * 118 }
     ]
   };
 
@@ -870,7 +780,6 @@
     $("balanceInput").disabled = !!state.balanceHidden;
     $("cardBrand").textContent = state.bankName;
     $("cardLast4").textContent = state.acctLast4;
-    $("abApp").textContent = state.bankName;
     document.title = state.bankName + " — Prop Banking App";
 
     var weekAgo = Date.now() - 1000 * 60 * 60 * 24 * 7;
@@ -878,26 +787,21 @@
       .reduce(function (s, t) { return s + t.amount; }, 0);
 
     var monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-    var monthNet = state.transactions.filter(function (t) { return t.type !== "pending" && t.time >= monthStart.getTime(); })
-      .reduce(function (s, t) { return s + t.amount; }, 0);
+    var monthExpense = state.transactions.filter(function (t) { return t.amount < 0 && t.time >= monthStart.getTime() && t.type !== "pending"; })
+      .reduce(function (s, t) { return s + Math.abs(t.amount); }, 0);
     $("tileMonthLabel").textContent = new Date().toLocaleString(undefined, { month: "long" });
 
     var yearStart = new Date(); yearStart.setMonth(0, 1); yearStart.setHours(0,0,0,0);
-    var yearNet = state.transactions.filter(function (t) { return t.type !== "pending" && t.time >= yearStart.getTime(); })
-      .reduce(function (s, t) { return s + t.amount; }, 0);
+    var yearExpense = state.transactions.filter(function (t) { return t.amount < 0 && t.time >= yearStart.getTime() && t.type !== "pending"; })
+      .reduce(function (s, t) { return s + Math.abs(t.amount); }, 0);
     $("tileYearLabel").textContent = String(new Date().getFullYear());
 
-    var tileMonthEl = $("tileMonth"), tileYearEl = $("tileYear");
     if (state.balanceHidden) {
-      tileMonthEl.textContent = MASK;
-      tileYearEl.textContent = MASK;
-      tileMonthEl.className = "tile-value";
-      tileYearEl.className = "tile-value";
+      $("tileMonth").textContent = MASK;
+      $("tileYear").textContent = MASK;
     } else {
-      tileMonthEl.textContent = (monthNet >= 0 ? "+" : "") + fmt(monthNet);
-      tileYearEl.textContent = (yearNet >= 0 ? "+" : "") + fmt(yearNet);
-      tileMonthEl.className = "tile-value " + (monthNet >= 0 ? "positive" : "negative");
-      tileYearEl.className = "tile-value " + (yearNet >= 0 ? "positive" : "negative");
+      $("tileMonth").textContent = fmt(monthExpense);
+      $("tileYear").textContent = fmt(yearExpense);
     }
 
     var sorted = state.transactions.slice().sort(function (a, b) { return b.time - a.time; });
@@ -1077,8 +981,6 @@
     });
   }
   bindChipGroup("payChips", "merchant");
-  bindChipGroup("delayChips", "delay");
-  bindChipGroup("creditChips", "credit");
   document.querySelectorAll("#payChips .chip").forEach(function(c){
     c.addEventListener("click", function(){ $("payMerchant").value = c.getAttribute("data-merchant"); });
   });
@@ -1120,57 +1022,6 @@
     document.querySelectorAll("#payChips .chip").forEach(function (c) { c.classList.remove("selected"); });
     showToast("Paid " + fmt(amt) + " to " + merchant);
     goto("home");
-  });
-
-  // ---- Alert ----
-  var lastAlertConfig = { from: "Jordan Blake", amount: 250, delay: 0, credit: "yes" };
-
-  $("confirmAlert").addEventListener("click", function () {
-    var from = $("alertFrom").value.trim() || "Someone";
-    var amt = parseFloat($("alertAmount").value) || 100;
-    var delayChip = document.querySelector("#delayChips .chip.selected");
-    var creditChip = document.querySelector("#creditChips .chip.selected");
-    var delay = delayChip ? Number(delayChip.getAttribute("data-delay")) : 0;
-    var credit = creditChip ? creditChip.getAttribute("data-credit") : "yes";
-    lastAlertConfig = { from: from, amount: amt, delay: delay, credit: credit };
-    closeSheet();
-    showToast(delay > 0 ? "Alert scheduled in " + delay + "s" : "Alert firing now");
-    scheduleAlert(lastAlertConfig);
-  });
-
-  function scheduleAlert(cfg) {
-    setTimeout(function () { fireAlert(cfg); }, cfg.delay * 1000);
-  }
-
-  function fireAlert(cfg) {
-    if (cfg.credit === "yes") {
-      state.balance += cfg.amount;
-      state.transactions.push({ id: nextId(), name: cfg.from, meta: "Payment received", amount: cfg.amount, type: "credit", time: Date.now() });
-      saveState(); render();
-    }
-    var body = "+" + fmt(cfg.amount) + " from " + cfg.from;
-    if (navigator.vibrate) { try { navigator.vibrate([40, 30, 40]); } catch (e) {} }
-
-    // Always the in-app banner: it's fully within our control (timing,
-    // dismissal, appearance) which matters more for repeatable takes than
-    // using a real system notification we can't reliably force to close.
-    $("abTitle").textContent = "Payment received";
-    $("abMsg").textContent = body;
-    $("abTime").textContent = "now";
-    var banner = $("alertBanner");
-    banner.classList.add("show");
-    clearTimeout(fireAlert._t);
-    fireAlert._t = setTimeout(function () { banner.classList.remove("show"); }, 4200);
-  }
-  $("alertBanner").addEventListener("click", function () { this.classList.remove("show"); });
-
-  // Safety net: if the banner is somehow still showing well past its auto-hide
-  // window (e.g. a background tab throttled the timer), force it closed the
-  // next time the app becomes visible again.
-  document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "visible") {
-      $("alertBanner").classList.remove("show");
-    }
   });
 
   // ---- Card screen toggles ----
