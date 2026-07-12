@@ -1115,7 +1115,7 @@
     if (navigator.vibrate) { try { navigator.vibrate([40, 30, 40]); } catch (e) {} }
 
     var useRealNotification = window.Notification && Notification.permission === "granted"
-      && "serviceWorker" in navigator && document.visibilityState !== "visible";
+      && "serviceWorker" in navigator;
 
     if (useRealNotification) {
       navigator.serviceWorker.ready.then(function (reg) {
