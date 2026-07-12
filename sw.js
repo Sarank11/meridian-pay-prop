@@ -1,4 +1,4 @@
-const CACHE = "british-express-v9";
+const CACHE = "british-express-v10";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
 

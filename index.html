@@ -247,6 +247,8 @@
   .tile-title { font-family: var(--serif); font-size: 13px; font-weight: 700; }
   .tile-sub { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
   .tile-value { font-family: var(--serif); font-size: 18px; font-weight: 700; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .tile-value.positive { color: var(--positive); }
+  .tile-value.negative { color: var(--negative); }
 
   /* ---------- Section ---------- */
   .section-title {
@@ -798,7 +800,10 @@
       { id: 6, name: "Addison Lee", meta: "Taxi", amount: -37.80, type: "debit", time: Date.now() - 1000 * 60 * 60 * 54 },
       { id: 7, name: "Dividend — Sterling Capital", meta: "Quarterly distribution", amount: 890.15, type: "credit", time: Date.now() - 1000 * 60 * 60 * 75 },
       { id: 8, name: "Selfridges", meta: "Card payment · Oxford Street", amount: -258.99, type: "debit", time: Date.now() - 1000 * 60 * 60 * 96 },
-      { id: 9, name: "Borough Market", meta: "Card payment", amount: -22.60, type: "debit", time: Date.now() - 1000 * 60 * 60 * 118 }
+      { id: 9, name: "Borough Market", meta: "Card payment", amount: -22.60, type: "debit", time: Date.now() - 1000 * 60 * 60 * 118 },
+      { id: 10, name: "Rent — Belgravia Mews", meta: "Standing order", amount: -3200, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 55 },
+      { id: 11, name: "Dividend — Sterling Capital", meta: "Quarterly distribution", amount: 1450.30, type: "credit", time: Date.now() - 1000 * 60 * 60 * 24 * 95 },
+      { id: 12, name: "The Shard Residences", meta: "Card payment", amount: -410.75, type: "debit", time: Date.now() - 1000 * 60 * 60 * 24 * 140 }
     ]
   };
 
@@ -873,21 +878,26 @@
       .reduce(function (s, t) { return s + t.amount; }, 0);
 
     var monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
-    var monthExpense = state.transactions.filter(function (t) { return t.amount < 0 && t.time >= monthStart.getTime() && t.type !== "pending"; })
-      .reduce(function (s, t) { return s + Math.abs(t.amount); }, 0);
+    var monthNet = state.transactions.filter(function (t) { return t.type !== "pending" && t.time >= monthStart.getTime(); })
+      .reduce(function (s, t) { return s + t.amount; }, 0);
     $("tileMonthLabel").textContent = new Date().toLocaleString(undefined, { month: "long" });
 
     var yearStart = new Date(); yearStart.setMonth(0, 1); yearStart.setHours(0,0,0,0);
-    var yearExpense = state.transactions.filter(function (t) { return t.amount < 0 && t.time >= yearStart.getTime() && t.type !== "pending"; })
-      .reduce(function (s, t) { return s + Math.abs(t.amount); }, 0);
+    var yearNet = state.transactions.filter(function (t) { return t.type !== "pending" && t.time >= yearStart.getTime(); })
+      .reduce(function (s, t) { return s + t.amount; }, 0);
     $("tileYearLabel").textContent = String(new Date().getFullYear());
 
+    var tileMonthEl = $("tileMonth"), tileYearEl = $("tileYear");
     if (state.balanceHidden) {
-      $("tileMonth").textContent = MASK;
-      $("tileYear").textContent = MASK;
+      tileMonthEl.textContent = MASK;
+      tileYearEl.textContent = MASK;
+      tileMonthEl.className = "tile-value";
+      tileYearEl.className = "tile-value";
     } else {
-      $("tileMonth").textContent = fmt(monthExpense);
-      $("tileYear").textContent = fmt(yearExpense);
+      tileMonthEl.textContent = (monthNet >= 0 ? "+" : "") + fmt(monthNet);
+      tileYearEl.textContent = (yearNet >= 0 ? "+" : "") + fmt(yearNet);
+      tileMonthEl.className = "tile-value " + (monthNet >= 0 ? "positive" : "negative");
+      tileYearEl.className = "tile-value " + (yearNet >= 0 ? "positive" : "negative");
     }
 
     var sorted = state.transactions.slice().sort(function (a, b) { return b.time - a.time; });
