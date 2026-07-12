@@ -1,4 +1,4 @@
-const CACHE = "british-express-v6";
+const CACHE = "british-express-v7";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
 
@@ -16,18 +16,17 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
+// Network-first: always try to fetch the latest version. Cache is only a
+// fallback for when there's no connection, never a way to hide new deploys.
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
   e.respondWith(
-    caches.match(e.request).then((cached) => {
-      const fetchPromise = fetch(e.request)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(e.request, copy));
-          return res;
-        })
-        .catch(() => cached);
-      return cached || fetchPromise;
-    })
+    fetch(e.request)
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(e.request, copy));
+        return res;
+      })
+      .catch(() => caches.match(e.request))
   );
 });

@@ -51,6 +51,7 @@
     margin: 0;
     height: 100%;
     height: 100dvh;
+    height: calc(var(--app-height, 100dvh));
     overflow: hidden;
     background: var(--bg);
     color: var(--ink);
@@ -64,6 +65,7 @@
     margin: 0 auto;
     height: 100%;
     height: 100dvh;
+    height: calc(var(--app-height, 100dvh));
     display: flex;
     flex-direction: column;
     background: var(--bg);
@@ -758,6 +760,17 @@
 (function () {
   "use strict";
 
+  // iOS standalone PWAs can report `100dvh` inconsistently, leaving a gap
+  // below the tab bar. Measure the real visible height in JS instead.
+  function setAppHeight() {
+    var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    document.documentElement.style.setProperty("--app-height", h + "px");
+  }
+  setAppHeight();
+  window.addEventListener("resize", setAppHeight);
+  window.addEventListener("orientationchange", function () { setTimeout(setAppHeight, 100); });
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", setAppHeight);
+
   var DEFAULTS = {
     holderName: "Saran",
     bankName: "British Express",
@@ -1222,7 +1235,15 @@
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
-      navigator.serviceWorker.register("sw.js").catch(function () {});
+      navigator.serviceWorker.register("sw.js").then(function (reg) {
+        reg.update();
+      }).catch(function () {});
+    });
+    var swReloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+      if (swReloaded) return;
+      swReloaded = true;
+      window.location.reload();
     });
   }
 })();
