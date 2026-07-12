@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.webmanifest" />
 <meta name="theme-color" content="#efe9da" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="British Express" />
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 <link rel="icon" href="icons/icon-192.png" />
@@ -73,6 +73,16 @@
     padding-bottom: env(safe-area-inset-bottom);
     position: relative;
     overflow: hidden;
+  }
+
+  /* Fills the area behind the notch/status bar (black-translucent mode
+     leaves that region transparent) so the system clock/icons sit on a
+     dark backdrop instead of floating over nothing. */
+  .status-fill {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: max(env(safe-area-inset-top), 20px);
+    background: var(--accent);
+    z-index: 1;
   }
 
   /* ---------- Top alert banner (fake notification) ---------- */
@@ -172,11 +182,11 @@
     background: var(--surface); border: 1px solid var(--hairline); border-radius: 5px;
     padding: 14px 17px; margin-bottom: 10px;
     display: flex; align-items: center; gap: 12px; cursor: pointer;
-    font-family: inherit; width: 100%; text-align: left;
+    font-family: inherit; width: 100%; text-align: left; color: inherit;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
   }
   .acct-row-info { flex: 1; min-width: 0; }
-  .acct-row-title { font-family: var(--serif); font-size: 13.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .acct-row-title { font-family: var(--serif); font-size: 13.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); }
   .acct-row-sub { font-size: 12px; color: var(--ink-faint); margin-top: 3px; }
   .acct-row-thumb {
     width: 44px; height: 30px; border-radius: 4px; background: var(--card-grad); flex-shrink: 0;
@@ -443,6 +453,7 @@
 </div>
 
 <div id="app">
+  <div class="status-fill" aria-hidden="true"></div>
 
   <div class="topbar">
     <div class="brand-row">
@@ -531,16 +542,16 @@
 
       <div class="tiles">
         <div class="tile">
-          <div class="tile-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3H14M2 8H14M2 13H9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-          <div class="tile-title">All expense</div>
-          <div class="tile-sub">All time</div>
-          <div class="tile-value" id="tileExpense">£0.00</div>
-        </div>
-        <div class="tile">
           <div class="tile-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M2 6.5H14" stroke="currentColor" stroke-width="1.6"/></svg></div>
           <div class="tile-title">This month</div>
           <div class="tile-sub" id="tileMonthLabel">—</div>
           <div class="tile-value" id="tileMonth">£0.00</div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3H14M2 8H14M2 13H9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <div class="tile-title">This year</div>
+          <div class="tile-sub" id="tileYearLabel">—</div>
+          <div class="tile-value" id="tileYear">£0.00</div>
         </div>
       </div>
 
@@ -861,20 +872,22 @@
     var weekDelta = state.transactions.filter(function (t) { return t.time >= weekAgo; })
       .reduce(function (s, t) { return s + t.amount; }, 0);
 
-    var totalExpense = state.transactions.filter(function (t) { return t.amount < 0 && t.type !== "pending"; })
-      .reduce(function (s, t) { return s + Math.abs(t.amount); }, 0);
-
     var monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0,0,0,0);
     var monthExpense = state.transactions.filter(function (t) { return t.amount < 0 && t.time >= monthStart.getTime() && t.type !== "pending"; })
       .reduce(function (s, t) { return s + Math.abs(t.amount); }, 0);
     $("tileMonthLabel").textContent = new Date().toLocaleString(undefined, { month: "long" });
 
+    var yearStart = new Date(); yearStart.setMonth(0, 1); yearStart.setHours(0,0,0,0);
+    var yearExpense = state.transactions.filter(function (t) { return t.amount < 0 && t.time >= yearStart.getTime() && t.type !== "pending"; })
+      .reduce(function (s, t) { return s + Math.abs(t.amount); }, 0);
+    $("tileYearLabel").textContent = String(new Date().getFullYear());
+
     if (state.balanceHidden) {
-      $("tileExpense").textContent = MASK;
       $("tileMonth").textContent = MASK;
+      $("tileYear").textContent = MASK;
     } else {
-      $("tileExpense").textContent = fmt(totalExpense);
       $("tileMonth").textContent = fmt(monthExpense);
+      $("tileYear").textContent = fmt(yearExpense);
     }
 
     var sorted = state.transactions.slice().sort(function (a, b) { return b.time - a.time; });
