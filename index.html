@@ -130,9 +130,14 @@
     width: 7px; height: 7px; border-radius: 50%; background: var(--negative);
     border: 1.5px solid var(--bg);
   }
+  .greeting-block { margin: 16px 0 18px; }
+  .greeting-eyebrow {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
   .greeting-main {
-    font-family: var(--serif); font-weight: 500;
-    font-size: 21px; margin: 14px 0 16px; letter-spacing: 0; color: var(--ink);
+    font-family: var(--serif); font-weight: 600;
+    font-size: 24px; margin: 2px 0 0; letter-spacing: 0; color: var(--ink);
   }
 
   /* ---------- Account cards (classic statement style) ---------- */
@@ -466,7 +471,10 @@
 
     <!-- HOME -->
     <section class="screen active" id="screen-home">
-      <div class="greeting-main" id="greetingName">Welcome back Saran</div>
+      <div class="greeting-block">
+        <div class="greeting-eyebrow">Welcome back</div>
+        <div class="greeting-main" id="greetingName">Saran</div>
+      </div>
 
       <div class="actions">
         <button class="action-btn" data-action="send">
@@ -821,7 +829,7 @@
   var MASK = "•••••.••";
 
   function render() {
-    $("greetingName").textContent = "Welcome back " + (state.holderName.split(" ")[0] || state.holderName);
+    $("greetingName").textContent = state.holderName.split(" ")[0] || state.holderName;
     $("brandWordmark").textContent = state.bankName;
     $("acctSuffix").textContent = state.acctLast4;
     $("acctTitleText").textContent = state.bankName.toUpperCase().replace(/[^A-Z0-9 &]/g, "") + " CURRENT ACCOUNT";
