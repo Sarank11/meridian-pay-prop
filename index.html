@@ -131,7 +131,7 @@
     border: 1.5px solid var(--bg);
   }
   .greeting-main {
-    font-family: var(--serif); font-style: italic; font-weight: 500;
+    font-family: var(--serif); font-weight: 500;
     font-size: 21px; margin: 14px 0 16px; letter-spacing: 0; color: var(--ink);
   }
 
@@ -466,7 +466,7 @@
 
     <!-- HOME -->
     <section class="screen active" id="screen-home">
-      <div class="greeting-main" id="greetingName">Hello Saran!</div>
+      <div class="greeting-main" id="greetingName">Welcome back Saran</div>
 
       <div class="actions">
         <button class="action-btn" data-action="send">
@@ -499,7 +499,7 @@
         </div>
         <div class="acct-balance-row">
           <div class="acct-balance-label">Available balance</div>
-          <input class="acct-balance-amount" id="balanceInput" inputmode="decimal" value="4000.00" aria-label="Available balance, tap to edit" />
+          <input class="acct-balance-amount" id="balanceInput" inputmode="decimal" value="71832.79" aria-label="Available balance, tap to edit" />
         </div>
         <div class="edit-pencil">Tap the amount to edit it</div>
       </div>
@@ -754,13 +754,18 @@
     bankName: "British Express",
     acctLast4: "8841",
     currency: "£",
-    balance: 4000.00,
+    balance: 71832.79,
     balanceHidden: false,
     transactions: [
-      { id: 1, name: "Direct Deposit", meta: "Salary", amount: 1100, type: "credit", time: Date.now() - 1000 * 60 * 60 * 3 },
-      { id: 2, name: "Streaming", meta: "Subscription", amount: -18, type: "debit", time: Date.now() - 1000 * 60 * 60 * 26 },
-      { id: 3, name: "Crypto Sale", meta: "Transfer in", amount: 67, type: "credit", time: Date.now() - 1000 * 60 * 60 * 50 },
-      { id: 4, name: "Groceries", meta: "Card payment", amount: -66, type: "debit", time: Date.now() - 1000 * 60 * 60 * 70 }
+      { id: 1, name: "Harrods", meta: "Card payment · Knightsbridge", amount: -612.40, type: "debit", time: Date.now() - 1000 * 60 * 60 * 4 },
+      { id: 2, name: "Direct Deposit", meta: "Salary", amount: 5200, type: "credit", time: Date.now() - 1000 * 60 * 60 * 9 },
+      { id: 3, name: "Claridge's", meta: "Restaurant · Mayfair", amount: -184.50, type: "debit", time: Date.now() - 1000 * 60 * 60 * 27 },
+      { id: 4, name: "TfL Travel", meta: "Oyster top-up", amount: -40, type: "debit", time: Date.now() - 1000 * 60 * 60 * 30 },
+      { id: 5, name: "Fortnum & Mason", meta: "Card payment · Piccadilly", amount: -96.20, type: "debit", time: Date.now() - 1000 * 60 * 60 * 48 },
+      { id: 6, name: "Addison Lee", meta: "Taxi", amount: -37.80, type: "debit", time: Date.now() - 1000 * 60 * 60 * 54 },
+      { id: 7, name: "Dividend — Sterling Capital", meta: "Quarterly distribution", amount: 890.15, type: "credit", time: Date.now() - 1000 * 60 * 60 * 75 },
+      { id: 8, name: "Selfridges", meta: "Card payment · Oxford Street", amount: -258.99, type: "debit", time: Date.now() - 1000 * 60 * 60 * 96 },
+      { id: 9, name: "Borough Market", meta: "Card payment", amount: -22.60, type: "debit", time: Date.now() - 1000 * 60 * 60 * 118 }
     ]
   };
 
@@ -816,7 +821,7 @@
   var MASK = "•••••.••";
 
   function render() {
-    $("greetingName").textContent = "Hello " + (state.holderName.split(" ")[0] || state.holderName) + "!";
+    $("greetingName").textContent = "Welcome back " + (state.holderName.split(" ")[0] || state.holderName);
     $("brandWordmark").textContent = state.bankName;
     $("acctSuffix").textContent = state.acctLast4;
     $("acctTitleText").textContent = state.bankName.toUpperCase().replace(/[^A-Z0-9 &]/g, "") + " CURRENT ACCOUNT";
