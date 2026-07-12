@@ -1205,18 +1205,20 @@
 
   render();
 
+  // Deliberately no service worker. It was the common thread behind every
+  // "still broken after the fix" report on this app (stale caches, iOS
+  // standalone update quirks, possible reload loops) and this app is
+  // always used with a live connection, so offline support isn't worth
+  // that risk. Actively clean up anything left over from earlier builds.
   if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
-      navigator.serviceWorker.register("sw.js").then(function (reg) {
-        reg.update();
-      }).catch(function () {});
-    });
-    var swReloaded = false;
-    navigator.serviceWorker.addEventListener("controllerchange", function () {
-      if (swReloaded) return;
-      swReloaded = true;
-      window.location.reload();
-    });
+    navigator.serviceWorker.getRegistrations().then(function (regs) {
+      regs.forEach(function (reg) { reg.unregister(); });
+    }).catch(function () {});
+  }
+  if ("caches" in window) {
+    caches.keys().then(function (names) {
+      names.forEach(function (name) { caches.delete(name); });
+    }).catch(function () {});
   }
 })();
 </script>
