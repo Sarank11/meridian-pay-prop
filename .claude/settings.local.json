@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(node --check /c/Users/saran/AppData/Local/Temp/claude/c--Users-saran-Documents-Larping-App/4f70ce90-e0b5-4312-adac-16afa7c6cb3d/scratchpad/_check.js)",
+      "Bash(python -)"
+    ]
+  }
+}
